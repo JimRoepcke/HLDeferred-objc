@@ -63,9 +63,13 @@
         if ([requestURL isKindOfClass: [NSString class]]) {
             requestURL = [NSURL URLWithString: requestURL];
         }
+      
+        NSTimeInterval timoutInterval = [context_ objectForKey: @"timoutInterval"] ? 
+          [[context_ objectForKey: @"timoutInterval"] doubleValue] : 18;
+      
         result = [NSMutableURLRequest requestWithURL: requestURL
                                          cachePolicy: NSURLRequestReloadIgnoringLocalCacheData
-                                     timeoutInterval: 240.0];
+                                     timeoutInterval: timoutInterval];
         // allow response to be gzip compressed
         [result setValue: @"gzip" forHTTPHeaderField: @"Accept-Encoding"];
         NSString *requestMethod = [context_ objectForKey: @"requestMethod"];
