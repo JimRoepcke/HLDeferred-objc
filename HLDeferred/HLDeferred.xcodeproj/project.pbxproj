@@ -14,6 +14,7 @@
 		3885A63412FBC56900BA5864 /* HLDeferredDataSourceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3885A63312FBC56900BA5864 /* HLDeferredDataSourceTest.m */; };
 		3885A67912FC783000BA5864 /* HLDeferredConcurrentDataSourceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3885A67812FC783000BA5864 /* HLDeferredConcurrentDataSourceTest.m */; };
 		3891B76B13D65ED100E5F1C0 /* HLDeferredDataSourceManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3891B76A13D65ED100E5F1C0 /* HLDeferredDataSourceManagerTest.m */; };
+		38AA12C218C3C9BC00248A11 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 38AA12C118C3C9BC00248A11 /* Default-568h@2x.png */; };
 		38CB29B312FDF0BD00739549 /* HLURLDataSourceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 38CB29B212FDF0BD00739549 /* HLURLDataSourceTest.m */; };
 		A7171D8112F8BBC800FF92BB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7171D8012F8BBC800FF92BB /* CoreGraphics.framework */; };
 		A7171D8212F8BBC800FF92BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
@@ -61,6 +62,7 @@
 		3885A63312FBC56900BA5864 /* HLDeferredDataSourceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HLDeferredDataSourceTest.m; path = Tests/HLDeferredDataSourceTest.m; sourceTree = "<group>"; };
 		3885A67812FC783000BA5864 /* HLDeferredConcurrentDataSourceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HLDeferredConcurrentDataSourceTest.m; path = Tests/HLDeferredConcurrentDataSourceTest.m; sourceTree = "<group>"; };
 		3891B76A13D65ED100E5F1C0 /* HLDeferredDataSourceManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HLDeferredDataSourceManagerTest.m; sourceTree = "<group>"; };
+		38AA12C118C3C9BC00248A11 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		38CB29B212FDF0BD00739549 /* HLURLDataSourceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HLURLDataSourceTest.m; path = Tests/HLURLDataSourceTest.m; sourceTree = "<group>"; };
 		A7171D5D12F8BB7C00FF92BB /* GHUnitIOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GHUnitIOS.framework; path = Frameworks/GHUnitIOS.framework; sourceTree = "<group>"; };
 		A7171D7A12F8BBA700FF92BB /* Tests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tests.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,6 +130,7 @@
 		0867D691FE84028FC02AAC07 /* HLDeferred */ = {
 			isa = PBXGroup;
 			children = (
+				38AA12C118C3C9BC00248A11 /* Default-568h@2x.png */,
 				A79B88AD12FA0D190048464F /* HLDeferred Headers */,
 				A72B196212F77215007685CF /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
@@ -307,6 +310,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38AA12C218C3C9BC00248A11 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
