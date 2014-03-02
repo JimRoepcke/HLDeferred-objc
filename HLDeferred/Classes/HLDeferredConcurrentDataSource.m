@@ -9,11 +9,18 @@
 #import "HLDeferredConcurrentDataSource.h"
 
 @implementation HLDeferredConcurrentDataSource
+{
+    BOOL executing_;
+    BOOL finished_;
+
+    NSThread *runLoopThread_;
+    NSSet *runLoopModes_;
+}
 
 @synthesize runLoopThread=runLoopThread_;
 @synthesize runLoopModes=runLoopModes_;
 
-- (id) init
+- (instancetype) init
 {
     self = [super init];
     if (self != nil) {

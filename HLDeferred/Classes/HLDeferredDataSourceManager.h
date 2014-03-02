@@ -12,12 +12,6 @@
 @class HLDeferredDataSource;
 
 @interface HLDeferredDataSourceManager : NSObject
-{
-    BOOL _networkRunLoopThreadContinue;
-    NSThread *_networkRunLoopThread;
-    NSOperationQueue *_queueForNetworkTransfers;
-    NSUInteger _runningNetworkTransferCount;
-}
 
 // observable, always changes on main thread
 // you may only access this on the main thread
@@ -28,7 +22,7 @@
 // you may only call this on the main thread
 - (void) decrementRunningNetworkTransferCount;
 
-- (id) initWithRunLoopThreadName: (NSString *)name;
+- (instancetype) initWithRunLoopThreadName: (NSString *)name;
 
 - (HLDeferred *) requestStartNetworkTransferDataSource: (HLDeferredDataSource *)ds;
 

@@ -9,6 +9,12 @@
 #import "HLURLDataSource.h"
 
 @implementation HLURLDataSource
+{
+    NSURLConnection *conn_;
+    NSURLResponse *response_;
+    NSMutableData *responseData_;
+    NSDictionary *context_;
+}
 
 @synthesize context=context_;
 @synthesize responseData=responseData_;
@@ -22,7 +28,7 @@
                                                        body, @"requestBody", nil]];
 }
 
-- (id) initWithContext: (NSDictionary *)aContext
+- (instancetype) initWithContext: (NSDictionary *)aContext
 {
     self = [super init];
     if (self) {
@@ -34,13 +40,13 @@
     return self;
 }
 
-- (id) initWithURL: (NSURL *)url
+- (instancetype) initWithURL: (NSURL *)url
 {
 	self = [self initWithContext: [NSDictionary dictionaryWithObject: url forKey: @"requestURL"]];
 	return self;
 }
 
-- (id) initWithURLString: (NSString *)urlString
+- (instancetype) initWithURLString: (NSString *)urlString
 {
 	self = [self initWithContext: [NSDictionary dictionaryWithObject: urlString forKey: @"requestURL"]];
 	return self;
@@ -58,30 +64,30 @@
 - (NSMutableURLRequest *) urlRequest
 {
     NSMutableURLRequest *result = nil;
-    id requestURL = [context_ objectForKey: @"requestURL"];
+    id requestURL = context_[@"requestURL"];
     if (requestURL) {
         if ([requestURL isKindOfClass: [NSString class]]) {
             requestURL = [NSURL URLWithString: requestURL];
         }
       
-        NSTimeInterval timoutInterval = [context_ objectForKey: @"timoutInterval"] ? 
-          [[context_ objectForKey: @"timoutInterval"] doubleValue] : 18;
+        NSTimeInterval timoutInterval = context_[@"timoutInterval"] ?
+          [context_[@"timoutInterval"] doubleValue] : 18;
       
         result = [NSMutableURLRequest requestWithURL: requestURL
                                          cachePolicy: NSURLRequestReloadIgnoringLocalCacheData
                                      timeoutInterval: timoutInterval];
         // allow response to be gzip compressed
         [result setValue: @"gzip" forHTTPHeaderField: @"Accept-Encoding"];
-        NSString *requestMethod = [context_ objectForKey: @"requestMethod"];
-        [result setHTTPMethod: requestMethod ? requestMethod : @"GET"];
-        NSData *requestBody = [context_ objectForKey: @"requestBody"];
+        NSString *requestMethod = context_[@"requestMethod"];
+        [result setHTTPMethod: requestMethod ?: @"GET"];
+        NSData *requestBody = context_[@"requestBody"];
         if (requestBody) {
             [result setHTTPBody: requestBody];
             [result setValue: [NSString stringWithFormat: @"%d", [requestBody length]] forHTTPHeaderField: @"Content-Length"];
         }
-        NSString *requestBodyContentType = [context_ objectForKey: @"requestBodyContentType"];
+        NSString *requestBodyContentType = context_[@"requestBodyContentType"];
         if (requestBodyContentType) [result setValue: requestBodyContentType forHTTPHeaderField: @"content-type"];
-        NSString *lastModified = [context_ objectForKey: @"requestIfModifiedSince"];
+        NSString *lastModified = context_[@"requestIfModifiedSince"];
 		if (lastModified) [result setValue: lastModified forHTTPHeaderField: @"If-Modified-Since"];
     }
     return result;
@@ -166,7 +172,7 @@
 {
     if ([response_ isKindOfClass: [NSHTTPURLResponse class]]) {
         NSHTTPURLResponse *r = (NSHTTPURLResponse *)response_;
-        return [[r allHeaderFields] objectForKey: key];
+        return [r allHeaderFields][key];
     }
     return nil;
 }

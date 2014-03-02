@@ -27,48 +27,35 @@ typedef void (^HLVoidBlock)(void);
 @end
 
 @interface HLDeferred : NSObject
-{
-    BOOL finalized_;
-    BOOL called_;
-	BOOL suppressAlreadyCalled_;
-    BOOL runningCallbacks_;
-    id result_;
-    NSInteger pauseCount_;
-    NSMutableArray *chain_;
-    id <HLDeferredCancellable> __weak canceller_;
-    HLLink *finalizer_;
-    
-    HLDeferred *chainedTo_;
-}
 
 @property (nonatomic, weak) id <HLDeferredCancellable> canceller;
 @property (nonatomic, readonly, assign, getter=isCalled) BOOL called;
 
 // designated initializer
-- (id) initWithCanceller: (id <HLDeferredCancellable>) theCanceller;
-- (id) init; // calls initWithCanceller: nil
+- (instancetype) initWithCanceller: (id <HLDeferredCancellable>) theCanceller;
+- (instancetype) init; // calls initWithCanceller: nil
 
-+ (HLDeferred *) deferredWithResult: (id)result;
-+ (HLDeferred *) deferredWithError:  (id)error;
-+ (HLDeferred *) deferredObserving: (HLDeferred *)otherDeferred;
++ (instancetype) deferredWithResult: (id)result;
++ (instancetype) deferredWithError:  (id)error;
++ (instancetype) deferredObserving: (HLDeferred *)otherDeferred;
 
-- (HLDeferred *) then: (ThenBlock)cb;
-- (HLDeferred *) fail: (FailBlock)eb;
-- (HLDeferred *) both: (ThenBlock)bb;
+- (instancetype) then: (ThenBlock)cb;
+- (instancetype) fail: (FailBlock)eb;
+- (instancetype) both: (ThenBlock)bb;
 
-- (HLDeferred *) then: (ThenBlock)cb fail: (FailBlock)eb;
+- (instancetype) then: (ThenBlock)cb fail: (FailBlock)eb;
 
-- (HLDeferred *) thenReturn: (id)aResult;
+- (instancetype) thenReturn: (id)aResult;
 
-- (HLDeferred *) thenFinally: (ThenBlock)aThenFinalizer;
-- (HLDeferred *) failFinally: (FailBlock)aFailFinalizer;
-- (HLDeferred *) bothFinally: (ThenBlock)aBothFinalizer;
+- (instancetype) thenFinally: (ThenBlock)aThenFinalizer;
+- (instancetype) failFinally: (FailBlock)aFailFinalizer;
+- (instancetype) bothFinally: (ThenBlock)aBothFinalizer;
 
-- (HLDeferred *) thenFinally: (ThenBlock)atThenFinalizer failFinally: (FailBlock)aFailFinalizer;
+- (instancetype) thenFinally: (ThenBlock)atThenFinalizer failFinally: (FailBlock)aFailFinalizer;
 
-- (HLDeferred *) takeResult: (id)aResult;
-- (HLDeferred *) takeError: (id)anError;
-- (HLDeferred *) notify: (HLDeferred *)otherDeferred;
+- (instancetype) takeResult: (id)aResult;
+- (instancetype) takeError: (id)anError;
+- (instancetype) notify: (HLDeferred *)otherDeferred;
 - (void) cancel;
 
 @end

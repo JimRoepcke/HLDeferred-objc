@@ -10,4 +10,6 @@
 
 @interface HLJSONDataSource : HLURLDataSource
 
+@property (nonatomic, assign) NSJSONReadingOptions JSONReadingOptions;
+
 @end

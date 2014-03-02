@@ -7,26 +7,11 @@
 //
 
 #import "HLJSONDataSource.h"
-#import "JSONKit.h"
 
 @interface HLJSONDataSourceTest : GHAsyncTestCase
 @end
 
 @implementation HLJSONDataSourceTest
-
-- (void) testEmptyStringToJSONKit
-{
-    NSError *error = nil;
-    id result = [@"" objectFromJSONStringWithParseOptions: JKParseOptionStrict error: &error];
-    GHAssertNil(result, @"expected nil back when parsing empty string");
-    GHAssertNotNil(error, @"expected error when parsing empty string: %@", error);
-    error = nil;
-    result = [@"null" objectFromJSONStringWithParseOptions: JKParseOptionStrict error: &error];
-    GHAssertNil(result, @"expected nil back when parsing \"null\"");
-    // i don't really want this error, but it's not working, so i want to know if this
-    // behaviour changes in the future.
-    GHAssertNotNil(error, @"expected error when parsing \"null\" string: %@", error);
-}
 
 - (void) testSimple
 {

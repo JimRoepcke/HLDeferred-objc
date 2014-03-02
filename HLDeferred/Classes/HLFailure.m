@@ -9,8 +9,11 @@
 #import "HLFailure.h"
 
 @implementation HLFailure
+{
+	id value_;
+}
 
-- (id) initWithValue: (id)v
+- (instancetype) initWithValue: (id)v
 {
 	self = [super init];
 	if (self) {
@@ -19,7 +22,7 @@
 	return self;
 }
 
-- (id) init
+- (instancetype) init
 {
 	self = [self initWithValue: nil];
 	return self;

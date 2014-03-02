@@ -9,12 +9,18 @@
 #import "HLDeferredDataSource.h"
 
 @implementation HLDeferredDataSource
+{
+    id error_;
+    id result_;
+    HLDeferred *deferred_;
+    NSThread *callingThread_;
+}
 
 @synthesize callingThread=callingThread_;
 @synthesize result=result_;
 @synthesize error=error_;
 
-- (id) init
+- (instancetype) init
 {
     self = [super init];
     if (self != nil) {

@@ -9,22 +9,16 @@
 #import "HLDeferredConcurrentDataSource.h"
 
 @interface HLURLDataSource : HLDeferredConcurrentDataSource
-{
-    NSURLConnection *conn_;
-    NSURLResponse *response_;
-    NSMutableData *responseData_;
-    NSDictionary *context_;
-}
 
 @property (nonatomic, strong) NSDictionary *context;
 @property (nonatomic, strong) NSMutableData *responseData;
 
 // designated initializer
-- (id) initWithContext: (NSDictionary *)aContext;
+- (instancetype) initWithContext: (NSDictionary *)aContext;
 
 // convenience initializers
-- (id) initWithURL: (NSURL *)url;
-- (id) initWithURLString: (NSString *)urlString;
+- (instancetype) initWithURL: (NSURL *)url;
+- (instancetype) initWithURLString: (NSString *)urlString;
 
 + (HLURLDataSource *) postToURL: (NSURL *)url
                        withBody: (NSString *)body;

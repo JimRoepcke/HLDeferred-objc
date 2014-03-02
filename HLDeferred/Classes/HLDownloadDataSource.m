@@ -10,13 +10,13 @@
 
 
 @implementation HLDownloadDataSource
-
-- (id) initWithSourceURL: (NSURL *)sourceURL destinationPath: (NSString *)destinationPath
 {
-    self = [super initWithContext: [NSDictionary dictionaryWithObjectsAndKeys:
-                                    sourceURL, @"sourceURL",
-                                    destinationPath, @"destinationPath",
-                                    nil]];
+    NSFileHandle *fileHandle_;
+}
+
+- (instancetype) initWithSourceURL: (NSURL *)sourceURL destinationPath: (NSString *)destinationPath
+{
+    self = [super initWithContext: @{@"sourceURL" : sourceURL, @"destinationPath": destinationPath}];
     if (self) {
         fileHandle_ = nil;
     }
@@ -33,12 +33,12 @@
 
 - (NSURL *) sourceURL
 {
-    return [[self context] objectForKey: @"sourceURL"];
+    return [self context][@"sourceURL"];
 }
 
 - (NSString *) destinationPath
 {
-    return [[self context] objectForKey: @"destinationPath"];
+    return [self context][@"destinationPath"];
 }
 
 #pragma mark -
@@ -51,7 +51,7 @@
                                                        timeoutInterval: 240.0];
     [request setHTTPMethod: @"GET"];
     [request setValue: @"gzip" forHTTPHeaderField: @"Accept-Encoding"];
-    NSString *lastModified = [[self context] objectForKey: @"requestIfModifiedSince"];
+    NSString *lastModified = [self context][@"requestIfModifiedSince"];
     if (lastModified) [request setValue: lastModified forHTTPHeaderField: @"If-Modified-Since"];
     return request;
 }

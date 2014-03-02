@@ -7,13 +7,10 @@
 //
 
 @interface HLFailure : NSObject
-{
-	id value_;
-}
 
 + (HLFailure *) wrap: (id)v;
 
-- (id) initWithValue: (id)v;
+- (instancetype) initWithValue: (id)v;
 - (id) value;
 - (NSError *) valueAsError;
 

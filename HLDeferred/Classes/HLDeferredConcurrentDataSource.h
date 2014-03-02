@@ -9,13 +9,6 @@
 #import "HLDeferredDataSource.h"
 
 @interface HLDeferredConcurrentDataSource : HLDeferredDataSource <HLDeferredCancellable>
-{
-    BOOL executing_;
-    BOOL finished_;
-
-    NSThread *runLoopThread_;
-    NSSet *runLoopModes_;
-}
 
 @property (strong) NSThread *runLoopThread; // default is nil, implying main thread
 @property (copy)   NSSet *runLoopModes; // default is nil, implying set containing NSDefaultRunLoopMode

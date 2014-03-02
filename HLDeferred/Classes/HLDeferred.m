@@ -24,7 +24,7 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
 @property (nonatomic, copy) FailBlock failBlock;
 @property (nonatomic, strong) id result;
 
-- (id) initWithThenBlock: (ThenBlock)cb_ failBlock: (FailBlock)fb_;
+- (instancetype) initWithThenBlock: (ThenBlock)cb_ failBlock: (FailBlock)fb_;
 
 - (id) process: (id)input;
 
@@ -36,7 +36,7 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
 @synthesize failBlock=_failBlock;
 @synthesize result=_result;
 
-- (id) initWithThenBlock: (ThenBlock)thenBlock_ failBlock: (FailBlock)failBlock_
+- (instancetype) initWithThenBlock: (ThenBlock)thenBlock_ failBlock: (FailBlock)failBlock_
 {
     self = [super init];
     if (self) {
@@ -78,7 +78,7 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
 
 @property (nonatomic, readonly, strong) HLDeferred *deferred;
 
-- (id) initWithDeferred: (HLDeferred *)d;
+- (instancetype) initWithDeferred: (HLDeferred *)d;
 
 @end
 
@@ -86,7 +86,7 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
 
 @synthesize deferred=deferred_;
 
-- (id) initWithDeferred: (HLDeferred *)deferred
+- (instancetype) initWithDeferred: (HLDeferred *)deferred
 {
     self = [super initWithThenBlock: nil failBlock: nil];
     if (self) {
@@ -119,23 +119,35 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
 @end
 
 @implementation HLDeferred
+{
+    BOOL finalized_;
+    BOOL called_;
+	BOOL suppressAlreadyCalled_;
+    BOOL runningCallbacks_;
+    id result_;
+    NSInteger pauseCount_;
+    NSMutableArray *chain_;
+    id <HLDeferredCancellable> __weak canceller_;
+    HLLink *finalizer_;
 
+    HLDeferred *chainedTo_;
+}
 @synthesize result=result_;
 @synthesize canceller=canceller_;
 @synthesize called=called_;
 @synthesize chainedTo=chainedTo_;
 
-+ (HLDeferred *) deferredWithResult: (id)aResult { return [[[self alloc] init] takeResult: aResult]; }
-+ (HLDeferred *) deferredWithError:  (id)anError { return [[[self alloc] init] takeError:  anError]; }
++ (instancetype) deferredWithResult: (id)aResult { return [[[self alloc] init] takeResult: aResult]; }
++ (instancetype) deferredWithError:  (id)anError { return [[[self alloc] init] takeError:  anError]; }
 
-+ (HLDeferred *) deferredObserving: (HLDeferred *)otherDeferred
++ (instancetype) deferredObserving: (HLDeferred *)otherDeferred
 {
     HLDeferred *result = [[self alloc] init];
     [otherDeferred notify: result];
     return result;
 }
 
-- (id) initWithCanceller: (id <HLDeferredCancellable>) theCanceller
+- (instancetype) initWithCanceller: (id <HLDeferredCancellable>) theCanceller
 {
     self = [super init];
 	if (self) {
@@ -152,7 +164,7 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
     return self;
 }
 
-- (id) init
+- (instancetype) init
 {
 	self = [self initWithCanceller: nil];
 	return self;
@@ -182,15 +194,15 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
     return result;
 }
 
-- (HLDeferred *) thenReturn: (id)aResult {
+- (instancetype) thenReturn: (id)aResult {
     return [self then: ^(id _) { return aResult; } fail: nil];
 }
 
-- (HLDeferred *) then: (ThenBlock)cb { return [self then: cb fail: nil      ]; }
-- (HLDeferred *) fail: (FailBlock)eb  { return [self then: nil       fail: eb ]; }
-- (HLDeferred *) both: (ThenBlock)bb { return [self then: bb fail: bb]; }
+- (instancetype) then: (ThenBlock)cb { return [self then: cb fail: nil      ]; }
+- (instancetype) fail: (FailBlock)eb  { return [self then: nil       fail: eb ]; }
+- (instancetype) both: (ThenBlock)bb { return [self then: bb fail: bb]; }
 
-- (HLDeferred *) then: (ThenBlock)cb fail: (FailBlock)eb
+- (instancetype) then: (ThenBlock)cb fail: (FailBlock)eb
 {
     // NSLog(@"%@ in %@", self, NSStringFromSelector(_cmd));
     if (finalized_) {
@@ -206,11 +218,11 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
     return self;
 }
 
-- (HLDeferred *) thenFinally: (ThenBlock)aThenFinalizer { return [self thenFinally: aThenFinalizer failFinally: nil           ]; }
-- (HLDeferred *) failFinally: (FailBlock)aFailFinalizer { return [self thenFinally: nil            failFinally: aFailFinalizer]; }
-- (HLDeferred *) bothFinally: (ThenBlock)aBothFinalizer { return [self thenFinally: aBothFinalizer failFinally: aBothFinalizer]; }
+- (instancetype) thenFinally: (ThenBlock)aThenFinalizer { return [self thenFinally: aThenFinalizer failFinally: nil           ]; }
+- (instancetype) failFinally: (FailBlock)aFailFinalizer { return [self thenFinally: nil            failFinally: aFailFinalizer]; }
+- (instancetype) bothFinally: (ThenBlock)aBothFinalizer { return [self thenFinally: aBothFinalizer failFinally: aBothFinalizer]; }
 
-- (HLDeferred *) thenFinally: (ThenBlock)aThenFinalizer failFinally: (FailBlock)aFailFinalizer
+- (instancetype) thenFinally: (ThenBlock)aThenFinalizer failFinally: (FailBlock)aFailFinalizer
 {
     if (finalized_) {
         @throw [self _alreadyFinalizedException];
@@ -225,14 +237,14 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
     return self;
 }
 
-- (HLDeferred *) takeResult: (id)aResult
+- (instancetype) takeResult: (id)aResult
 {
     // NSLog(@"%@ in %@", self, NSStringFromSelector(_cmd));
     [self _startRunCallbacks: aResult];
     return self;
 }
 
-- (HLDeferred *) takeError: (id)anError
+- (instancetype) takeError: (id)anError
 {
     // NSLog(@"%@ in %@", self, NSStringFromSelector(_cmd));
     id err = anError;
@@ -252,7 +264,7 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
 //
 // return [HLDeferred deferredObserving: _cachedDeferred];
 //
-- (HLDeferred *) notify: (HLDeferred *)otherDeferred
+- (instancetype) notify: (HLDeferred *)otherDeferred
 {
 	// NSLog(@"%@ in %@", self, NSStringFromSelector(_cmd));
     if (finalized_) {
@@ -301,31 +313,27 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
 {
     return [NSException exceptionWithName: HLDeferredAlreadyCalledException
                                    reason: @"this HLDeferred has already been called"
-                                 userInfo: [NSDictionary dictionaryWithObject: self
-                                                                       forKey: @"HLDeferred"]];
+                                 userInfo: @{@"HLDeferred": self}];
 }
 
 - (NSException *) _alreadyFinalizedException
 {
     return [NSException exceptionWithName: HLDeferredAlreadyFinalizedException
                                    reason: @"this HLDeferred has already been finalized"
-                                 userInfo: [NSDictionary dictionaryWithObject: self
-                                                                       forKey: @"HLDeferred"]];
+                                 userInfo: @{@"HLDeferred": self}];
 }
 
 - (NSException *) _alreadyChainedException
 {
     return [NSException exceptionWithName: NSInvalidArgumentException
                                    reason: @"this HLDeferred is already chained to another HLDeferred"
-                                 userInfo: [NSDictionary dictionaryWithObject: self
-                                                                       forKey: @"HLDeferred"]];
+                                 userInfo: @{@"HLDeferred": self}];
 }
 - (NSException *) _alreadyHasAFinalizerException
 {
     return [NSException exceptionWithName: NSInternalInconsistencyException
                                    reason: @"this HLDeferred already has a finalizer"
-                                 userInfo: [NSDictionary dictionaryWithObject: self
-                                                                       forKey: @"HLDeferred"]];
+                                 userInfo: @{@"HLDeferred": self}];
 }
 
 
@@ -376,7 +384,7 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
         [current setCalled: YES];
         [current setChainedTo: nil];
         while ([current->chain_ count]) {
-            HLLink *item = [current->chain_ objectAtIndex: 0];
+            HLLink *item = current->chain_[0];
             [current->chain_ removeObjectAtIndex: 0];
             
             if ([item isKindOfClass: [HLContinuationLink class]]) {

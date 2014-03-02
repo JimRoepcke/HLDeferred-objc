@@ -24,14 +24,14 @@
 
 - (void) testAllocInitDealloc
 {
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray array]];
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[]];
     GHAssertNotNULL(d, nil);
 	[d release];
 }
 
 - (void) testFireOnFirstResultEmptyList
 {
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray array]
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[]
 												fireOnFirstResult: YES];
 	GHAssertFalse([d isCalled], @"empty HLDeferredList shouldn't immediately resolve if fireOnFirstResult is YES");
 	[d release];
@@ -42,7 +42,7 @@
 	HLDeferred *d1 = [HLDeferred deferredWithResult: @"ok"];
 	HLDeferred *d2 = [[HLDeferred alloc] init];
 	
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray arrayWithObjects: d1, d2, nil]
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[d1, d2]
 												fireOnFirstResult: YES];
 	GHAssertTrue([d isCalled], @"HLDeferredList with results should immediately resolve if fireOnFirstResult is YES");
 	[d release];
@@ -55,7 +55,7 @@
 	HLDeferred *d1 = [[HLDeferred alloc] init];
 	HLDeferred *d2 = [[HLDeferred alloc] init];
 	
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray arrayWithObjects: d1, d2, nil]
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[d1, d2]
 												fireOnFirstResult: YES];
 	GHAssertFalse([d isCalled], @"HLDeferredList shouldn't immediately resolve, no results yet");
 	[d1 takeResult: @"ok"];
@@ -85,7 +85,7 @@
 
 - (void) testEmptyList
 {
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray array]];
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[]];
 	GHAssertTrue([d isCalled], @"empty HLDeferredList didn't immediately resolve");
 	[d release];
 }
@@ -94,7 +94,7 @@
 {
 	HLDeferred *d1 = [[HLDeferred alloc] init];
 	
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray arrayWithObjects: d1, nil]];
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[d1]];
 	GHAssertFalse([d isCalled], @"HLDeferredList shouldn't immediately resolve, no results yet");
 	[d1 takeResult: @"ok"];
 	GHAssertTrue([d isCalled], @"HLDeferredList should be resolved");
@@ -105,7 +105,7 @@
 	[d then: ^(id result) {
 		@try {
             success = YES;
-            GHAssertEqualStrings([result objectAtIndex: 0], @"ok", @"expected result not received");
+            GHAssertEqualStrings(result[0], @"ok", @"expected result not received");
         } @catch (NSException *exception) {
             blockException = [exception retain];
         } @finally {
@@ -123,7 +123,7 @@
 {
 	HLDeferred *d1 = [[HLDeferred alloc] init];
 	
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray arrayWithObjects: d1, nil]];
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[d1]];
 	GHAssertFalse([d isCalled], @"HLDeferredList shouldn't immediately resolve, no results yet");
 	[d1 takeError: @"ok"];
 	GHAssertTrue([d isCalled], @"HLDeferredList should be resolved");
@@ -136,7 +136,7 @@
             success = YES;
             GHAssertEquals((int)[result count], 1, @"expected one result");
             GHAssertTrue([[result objectAtIndex: 0] isKindOfClass: [HLFailure class]], @"first result should be HLFailure");
-            GHAssertEqualStrings([(HLFailure *)[result objectAtIndex: 0] value], @"ok", @"expected first result value not received");
+            GHAssertEqualStrings([(HLFailure *)result[0] value], @"ok", @"expected first result value not received");
         } @catch (NSException *exception) {
             blockException = [exception retain];
         } @finally {
@@ -155,7 +155,7 @@
 {
 	HLDeferred *d1 = [[HLDeferred alloc] init];
 	
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray arrayWithObjects: d1, nil]];
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[d1]];
 	GHAssertFalse([d isCalled], @"HLDeferredList shouldn't immediately resolve, no results yet");
 
 	__block BOOL success = NO;
@@ -164,7 +164,7 @@
 	[d then: ^(id result) {
         @try {
             success = YES;
-            GHAssertEqualStrings([result objectAtIndex: 0], @"ok", @"expected result not received");
+            GHAssertEqualStrings(result[0], @"ok", @"expected result not received");
         } @catch (NSException *exception) {
             blockException = [exception retain];
         } @finally {
@@ -187,7 +187,7 @@
 	HLDeferred *d1 = [[HLDeferred alloc] init];
 	HLDeferred *d2 = [[HLDeferred alloc] init];
 	
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray arrayWithObjects: d1, d2, nil]];
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[d1, d2]];
 	GHAssertFalse([d isCalled], @"HLDeferredList shouldn't immediately resolve, no results yet");
 	[d1 takeResult: @"ok1"];
 	GHAssertFalse([d isCalled], @"HLDeferredList shouldn't immediately resolve, results incomplete");
@@ -202,8 +202,8 @@
             success = YES;
             GHAssertTrue([result isKindOfClass: [NSArray class]], @"callback result should be NSArray");
             GHAssertEquals((int)[result count], 2, @"expected two results");
-            GHAssertEqualStrings([result objectAtIndex: 0], @"ok1", @"expected first result not received");
-            GHAssertEqualStrings([result objectAtIndex: 1], @"ok2", @"expected second result not received");
+            GHAssertEqualStrings(result[0], @"ok1", @"expected first result not received");
+            GHAssertEqualStrings(result[1], @"ok2", @"expected second result not received");
         } @catch (NSException *exception) {
             blockException = [exception retain];
         } @finally {
@@ -221,7 +221,7 @@
 
 - (void) testFireOnFirstErrorEmptyList
 {
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray array]
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[]
 												 fireOnFirstError: YES];
 	GHAssertTrue([d isCalled], @"empty HLDeferredList should immediately resolve, even when fireOnFirstError is YES");
 	[d release];
@@ -232,7 +232,7 @@
 	HLDeferred *d1 = [HLDeferred deferredWithError: @"ok"];
 	HLDeferred *d2 = [[HLDeferred alloc] init];
 	
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray arrayWithObjects: d1, d2, nil]
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[d1, d2]
 												fireOnFirstError: YES];
 	GHAssertTrue([d isCalled], @"HLDeferredList with errors should immediately resolve if fireOnFirstError is YES");
 	[d release];
@@ -245,7 +245,7 @@
 	HLDeferred *d1 = [[HLDeferred alloc] init];
 	HLDeferred *d2 = [[HLDeferred alloc] init];
 	
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray arrayWithObjects: d1, d2, nil]
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[d1, d2]
 												fireOnFirstError: YES];
 	GHAssertFalse([d isCalled], @"HLDeferredList shouldn't immediately resolve, no results yet");
 	[d1 takeError: @"ok"];
@@ -294,7 +294,7 @@
 {
 	HLDeferred *d1 = [[HLDeferred alloc] init];
 	
-    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray arrayWithObjects: d1, nil]
+    HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[d1]
 													consumeErrors: YES];
 
     __block NSException *blockException = nil;
@@ -328,8 +328,8 @@
         @try {
             GHAssertTrue([result isKindOfClass: [NSArray class]], @"callback result should be NSArray");
             GHAssertEquals((int)[result count], 1, @"expected one result");
-            GHAssertTrue([[result objectAtIndex: 0] isKindOfClass: [HLFailure class]], @"callback result first element should be HLFailure");
-            GHAssertEqualStrings([(HLFailure *)[result objectAtIndex: 0] value], @"ok", @"expected error not received");
+            GHAssertTrue([result[0] isKindOfClass: [HLFailure class]], @"callback result first element should be HLFailure");
+            GHAssertEqualStrings([(HLFailure *)result[0] value], @"ok", @"expected error not received");
         } @catch (NSException *exception) {
             blockException = [exception retain];
         } @finally {
@@ -346,7 +346,7 @@
 {
 	HLDeferred *d1 = [[HLDeferred alloc] init];
 	HLDeferred *d2 = [[HLDeferred alloc] init];
-	HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: [NSArray arrayWithObjects: d1, d2, nil]];
+	HLDeferredList *d = [[HLDeferredList alloc] initWithDeferreds: @[d1, d2]];
 	__block BOOL success = NO;
     __block NSException *blockException = nil;
 	
@@ -411,7 +411,7 @@
 
 @implementation HLDeferredListTestCanceller
 
-- (id) init
+- (instancetype) init
 {
 	self = [super init];
 	if (self) {

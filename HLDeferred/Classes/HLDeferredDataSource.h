@@ -15,12 +15,6 @@
 // designed to do the right thing if you override -execute.
 
 @interface HLDeferredDataSource : NSOperation <HLDeferredCancellable>
-{
-    id error_;
-    id result_;
-    HLDeferred *deferred_;  
-    NSThread *callingThread_;
-}
 
 // the deferred will receive its result on this thread
 // the thread must be running its run loop

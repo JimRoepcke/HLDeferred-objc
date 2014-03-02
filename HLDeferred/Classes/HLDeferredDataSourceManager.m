@@ -23,11 +23,17 @@
 @end
 
 @implementation HLDeferredDataSourceManager
+{
+    BOOL _networkRunLoopThreadContinue;
+    NSThread *_networkRunLoopThread;
+    NSOperationQueue *_queueForNetworkTransfers;
+    NSUInteger _runningNetworkTransferCount;
+}
 
 @synthesize networkRunLoopThread=_networkRunLoopThread;
 @synthesize queueForNetworkTransfers=_queueForNetworkTransfers;
 
-- (id) initWithRunLoopThreadName: (NSString *)name
+- (instancetype) initWithRunLoopThreadName: (NSString *)name
 {
     self = [super init];
     if (self) {

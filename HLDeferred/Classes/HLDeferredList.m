@@ -11,15 +11,24 @@
 NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
 
 @implementation HLDeferredList
+{
+    NSArray *deferreds_;
+    NSMutableArray *results_;
+    BOOL fireOnFirstResult_;
+    BOOL fireOnFirstError_;
+    BOOL consumeErrors_;
+    NSUInteger finishedCount_;
+	BOOL cancelDeferredsWhenCancelled_;
+}
 
-- (id) initWithDeferreds: (NSArray *)list
+- (instancetype) initWithDeferreds: (NSArray *)list
        fireOnFirstResult: (BOOL)flFireOnFirstResult
         fireOnFirstError: (BOOL)flFireOnFirstError
            consumeErrors: (BOOL)flConsumeErrors
 {
     self = [super init];
     if (self) {
-        deferreds_ = [(list ? list : [NSArray array]) copy];
+        deferreds_ = [(list ?: @[]) copy];
         fireOnFirstResult_ = flFireOnFirstResult;
         fireOnFirstError_ = flFireOnFirstError;
         consumeErrors_ = flConsumeErrors;
@@ -27,8 +36,7 @@ NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
         finishedCount_ = 0;
         cancelDeferredsWhenCancelled_ = NO;
 		
-        int i;
-        for (i = 0; i < [deferreds_ count]; i++) {
+        for (int i = 0; i < [deferreds_ count]; i++) {
             [results_ addObject: [NSNull null]];
         }
         
@@ -42,7 +50,7 @@ NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
                     [result both: deferredCallback];
                     return result;
                 };
-                [results_ replaceObjectAtIndex: idx withObject: result ? result : [NSNull null]];
+                [results_ replaceObjectAtIndex: idx withObject: result ?: [NSNull null]];
                 ++finishedCount_;
                 BOOL succeeded = ![result isKindOfClass: [HLFailure class]];
                 if (![self isCalled]) {
@@ -65,7 +73,7 @@ NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
     return self;
 }
 
-- (id) initWithDeferreds: (NSArray *)list
+- (instancetype) initWithDeferreds: (NSArray *)list
 {
     self = [self initWithDeferreds: list
                  fireOnFirstResult: NO
@@ -74,7 +82,7 @@ NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
     return self;
 }
 
-- (id) initWithDeferreds: (NSArray *)list fireOnFirstResult: (BOOL)flFireOnFirstResult
+- (instancetype) initWithDeferreds: (NSArray *)list fireOnFirstResult: (BOOL)flFireOnFirstResult
 {
     self = [self initWithDeferreds: list
                  fireOnFirstResult: flFireOnFirstResult
@@ -83,7 +91,7 @@ NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
     return self;
 }
 
-- (id) initWithDeferreds: (NSArray *)list fireOnFirstResult: (BOOL)flFireOnFirstResult consumeErrors: (BOOL)flConsumeErrors
+- (instancetype) initWithDeferreds: (NSArray *)list fireOnFirstResult: (BOOL)flFireOnFirstResult consumeErrors: (BOOL)flConsumeErrors
 {
     self = [self initWithDeferreds: list
                  fireOnFirstResult: flFireOnFirstResult
@@ -92,7 +100,7 @@ NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
     return self;
 }
 
-- (id) initWithDeferreds: (NSArray *)list fireOnFirstError: (BOOL)flFireOnFirstError
+- (instancetype) initWithDeferreds: (NSArray *)list fireOnFirstError: (BOOL)flFireOnFirstError
 {
     self = [self initWithDeferreds: list
                  fireOnFirstResult: NO
@@ -101,7 +109,7 @@ NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
     return self;
 }
 
-- (id) initWithDeferreds: (NSArray *)list consumeErrors: (BOOL)flConsumeErrors
+- (instancetype) initWithDeferreds: (NSArray *)list consumeErrors: (BOOL)flConsumeErrors
 {
     self = [self initWithDeferreds: list
                  fireOnFirstResult: NO

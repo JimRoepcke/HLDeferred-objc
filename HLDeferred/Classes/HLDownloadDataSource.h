@@ -9,10 +9,7 @@
 #import "HLURLDataSource.h"
 
 @interface HLDownloadDataSource : HLURLDataSource
-{
-    NSFileHandle *fileHandle_;
-}
 
-- (id) initWithSourceURL: (NSURL *)sourceURL destinationPath: (NSString *)destinationPath;
+- (instancetype) initWithSourceURL: (NSURL *)sourceURL destinationPath: (NSString *)destinationPath;
 
 @end

@@ -7,15 +7,19 @@
 //
 
 #import "HLJSONDataSource.h"
-#import "JSONKit.h"
 
 @implementation HLJSONDataSource
+{
+    NSJSONReadingOptions JSONReadingOptions_;
+}
+
+@synthesize JSONReadingOptions=JSONReadingOptions_;
 
 - (void) responseFinished
 {
     if ([self responseData]) {
         NSError *error = nil;
-        id result = [[self responseData] objectFromJSONDataWithParseOptions: JKParseOptionStrict error: &error];
+        id result = [NSJSONSerialization JSONObjectWithData: [self responseData] options: [self JSONReadingOptions] error: &error];
         if (result) {
             [self setResponseData: nil];
             [self setResult: result];
