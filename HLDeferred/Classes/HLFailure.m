@@ -14,7 +14,7 @@
 {
 	self = [super init];
 	if (self) {
-		value_ = [([v isKindOfClass: [HLFailure class]] ? [(HLFailure *)v value] : v) retain];
+		value_ = ([v isKindOfClass: [HLFailure class]] ? [(HLFailure *)v value] : v);
 	}
 	return self;
 }
@@ -27,14 +27,13 @@
 
 - (void) dealloc
 {
-	[value_ release]; value_ = nil;
-	[super dealloc];
+	 value_ = nil;
 }
 
 + (HLFailure *) wrap: (id)v
 {
 	if ([v isKindOfClass: [HLFailure class]]) return v;
-	return [[[[self class] alloc] initWithValue: v] autorelease];
+	return [[[self class] alloc] initWithValue: v];
 }
 
 - (id) value { return value_; }

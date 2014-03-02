@@ -35,13 +35,13 @@ typedef void (^HLVoidBlock)(void);
     id result_;
     NSInteger pauseCount_;
     NSMutableArray *chain_;
-    id <HLDeferredCancellable> canceller_;
+    id <HLDeferredCancellable> __weak canceller_;
     HLLink *finalizer_;
     
     HLDeferred *chainedTo_;
 }
 
-@property (nonatomic, assign) id <HLDeferredCancellable> canceller;
+@property (nonatomic, weak) id <HLDeferredCancellable> canceller;
 @property (nonatomic, readonly, assign, getter=isCalled) BOOL called;
 
 // designated initializer
