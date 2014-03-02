@@ -483,15 +483,6 @@
 
 @implementation HLDeferredTestCanceller
 
-- (instancetype) init
-{
-	self = [super init];
-	if (self) {
-		success = NO;
-	}
-	return self;
-}
-
 - (void) deferredWillCancel: (HLDeferred *)d
 {
 	success = YES;

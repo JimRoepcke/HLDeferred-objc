@@ -22,9 +22,9 @@ NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
 }
 
 - (instancetype) initWithDeferreds: (NSArray *)list
-       fireOnFirstResult: (BOOL)flFireOnFirstResult
-        fireOnFirstError: (BOOL)flFireOnFirstError
-           consumeErrors: (BOOL)flConsumeErrors
+                 fireOnFirstResult: (BOOL)flFireOnFirstResult
+                  fireOnFirstError: (BOOL)flFireOnFirstError
+                     consumeErrors: (BOOL)flConsumeErrors
 {
     self = [super init];
     if (self) {
@@ -33,9 +33,7 @@ NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
         fireOnFirstError_ = flFireOnFirstError;
         consumeErrors_ = flConsumeErrors;
         results_ = [[NSMutableArray alloc] initWithCapacity: [list count]];
-        finishedCount_ = 0;
-        cancelDeferredsWhenCancelled_ = NO;
-		
+
         for (int i = 0; i < [deferreds_ count]; i++) {
             [results_ addObject: [NSNull null]];
         }
@@ -116,12 +114,6 @@ NSString * const kHLDeferredListNilSentinel = @"__HLDeferredListNilSentinel__";
                   fireOnFirstError: NO
                      consumeErrors: flConsumeErrors];
     return self;
-}
-
-- (void) dealloc
-{
-     deferreds_ = nil;
-     results_ = nil;
 }
 
 - (void) cancelDeferredsWhenCancelled

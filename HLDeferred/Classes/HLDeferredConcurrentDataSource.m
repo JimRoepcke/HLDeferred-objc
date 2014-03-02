@@ -20,17 +20,6 @@
 @synthesize runLoopThread=runLoopThread_;
 @synthesize runLoopModes=runLoopModes_;
 
-- (instancetype) init
-{
-    self = [super init];
-    if (self != nil) {
-        executing_ = NO;
-        finished_ = NO;
-    }
-    return self;
-}
-
-
 - (NSThread *) actualRunLoopThread
 {
     NSThread *result = [self runLoopThread];
@@ -46,7 +35,7 @@
 - (NSSet *) actualRunLoopModes
 {
     NSSet * result = [self runLoopModes];
-    if ( (result == nil) || ([result count] == 0) ) {
+    if ( ! [result count] ) {
         result = [NSSet setWithObject: NSDefaultRunLoopMode];
     }
     return result;

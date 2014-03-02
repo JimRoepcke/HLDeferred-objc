@@ -22,17 +22,6 @@
 	return self;
 }
 
-- (instancetype) init
-{
-	self = [self initWithValue: nil];
-	return self;
-}
-
-- (void) dealloc
-{
-	 value_ = nil;
-}
-
 + (HLFailure *) wrap: (id)v
 {
 	if ([v isKindOfClass: [HLFailure class]]) return v;

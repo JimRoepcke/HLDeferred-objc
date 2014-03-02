@@ -17,15 +17,7 @@
 - (instancetype) initWithSourceURL: (NSURL *)sourceURL destinationPath: (NSString *)destinationPath
 {
     self = [super initWithContext: @{@"sourceURL" : sourceURL, @"destinationPath": destinationPath}];
-    if (self) {
-        fileHandle_ = nil;
-    }
     return self;
-}
-
-- (void) dealloc
-{
-     fileHandle_ = nil;
 }
 
 #pragma mark -

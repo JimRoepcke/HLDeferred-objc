@@ -37,7 +37,6 @@
 {
     self = [super init];
     if (self) {
-
         // Create the network transfer queue.  We will run up to 4 simultaneous network requests.
 
         _queueForNetworkTransfers = [[NSOperationQueue alloc] init];

@@ -11,9 +11,9 @@
 @interface HLDeferredList : HLDeferred
 
 - (instancetype) initWithDeferreds: (NSArray *)list
-       fireOnFirstResult: (BOOL)flFireOnFirstResult
-        fireOnFirstError: (BOOL)flFireOnFirstError
-           consumeErrors: (BOOL)flConsumeErrors;
+                 fireOnFirstResult: (BOOL)flFireOnFirstResult
+                  fireOnFirstError: (BOOL)flFireOnFirstError
+                     consumeErrors: (BOOL)flConsumeErrors;
 
 - (instancetype) initWithDeferreds: (NSArray *)list;
 - (instancetype) initWithDeferreds: (NSArray *)list fireOnFirstResult: (BOOL)flFireOnFirstResult;

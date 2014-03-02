@@ -46,12 +46,6 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
     return self;
 }
 
-- (void) dealloc
-{
-     _thenBlock = nil;
-     _failBlock = nil;
-}
-
 - (id) process: (id)input
 {
     id result = input;
@@ -151,13 +145,7 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
 {
     self = [super init];
 	if (self) {
-        called_ = NO;
-		suppressAlreadyCalled_ = NO;
-        runningCallbacks_ = NO;
         result_ = kHLDeferredNoResult;
-        pauseCount_ = 0;
-        finalized_ = NO;
-        finalizer_ = nil;
         chain_ = [[NSMutableArray alloc] init];
         canceller_ = theCanceller;
 	}
@@ -168,13 +156,6 @@ NSString * const HLDeferredAlreadyFinalizedException = @"HLDeferredAlreadyFinali
 {
 	self = [self initWithCanceller: nil];
 	return self;
-}
-
-- (void) dealloc
-{
-    canceller_ = nil;
-     finalizer_ = nil;
-     chain_ = nil;
 }
 
 - (NSString *)debugDescription

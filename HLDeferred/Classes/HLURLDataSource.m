@@ -32,9 +32,6 @@
 {
     self = [super init];
     if (self) {
-        conn_ = nil;
-        response_ = nil;
-        responseData_ = nil;
         context_ = aContext;
     }
     return self;
@@ -50,12 +47,6 @@
 {
 	self = [self initWithContext: [NSDictionary dictionaryWithObject: urlString forKey: @"requestURL"]];
 	return self;
-}
-
-- (void) dealloc
-{
-     conn_ = nil;
-     response_ = nil;
 }
 
 #pragma mark -

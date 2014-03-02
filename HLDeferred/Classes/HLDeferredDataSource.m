@@ -23,9 +23,7 @@
 - (instancetype) init
 {
     self = [super init];
-    if (self != nil) {
-        error_ = nil;
-        result_ = nil;
+    if (self) {
         deferred_ = [[HLDeferred alloc] initWithCanceller: self];
     }
     return self;
@@ -34,7 +32,6 @@
 - (void) dealloc
 {
     [deferred_ setCanceller: nil];
-     deferred_ = nil;
 }
 
 - (NSThread *) actualCallingThread

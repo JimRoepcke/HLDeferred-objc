@@ -55,12 +55,6 @@
 
 @implementation HLDeferredConcurrentDataSourceTestDataSource
 
-- (instancetype) init
-{
-	self = [super init];
-	return self;
-}
-
 - (void) execute
 {
 	success = YES;
